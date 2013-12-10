@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:validate="http://www.mulesoft.org/schema/mule/validate"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/validate http://www.mulesoft.org/schema/mule/validate/current/mule-validate.xsd">
+
+   	<flow name="regexValid">
+       	<!-- Matches Canadian PostalCode formats with or without spaces (e.g., "T2X 1V4" or "T2X1V4") -->
+    	<validate:using-regex value="T2X1V4" regex="^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$" />
+    </flow>
+    
+    <flow name="regexInvalid">
+       	<!-- Matches Canadian PostalCode formats with or without spaces (e.g., "T2X 1V4" or "T2X1V4") -->
+    	<validate:using-regex value="#[value]" regex="^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$" />
+    </flow>
+    
+    <flow name="regexCustomInvalid">
+       	<!-- Matches Canadian PostalCode formats with or without spaces (e.g., "T2X 1V4" or "T2X1V4") -->
+    	<validate:using-regex value="#[value]" regex="^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$" exception-class="#[exceptionClass]" message="#[customMessage]" />
+    </flow>
+    
+</mule>

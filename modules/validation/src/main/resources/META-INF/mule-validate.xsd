@@ -1,0 +1,1198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.mulesoft.org/schema/mule/validate"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+	targetNamespace="http://www.mulesoft.org/schema/mule/validate"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+	<xsd:import namespace="http://www.springframework.org/schema/beans"
+		schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.1.xsd" />
+	<xsd:import namespace="http://www.mulesoft.org/schema/mule/core"
+		schemaLocation="http://www.mulesoft.org/schema/mule/core/3.4/mule.xsd" />
+
+
+	<xsd:element name="validationMessageProcessor" abstract="true"
+		substitutionGroup="mule:abstract-message-processor">
+		<xsd:annotation>
+			<xsd:documentation>
+				A validating message processor
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="validationProcessorType">
+		<xsd:complexContent>
+			<xsd:extension base="mule:abstractMessageProcessorType"
+				xmlns="http://www.mulesoft.org/schema/mule/validate">
+				<xsd:attribute name="exception-class" type="mule:substitutableClass"
+					use="optional">
+					<xsd:annotation>
+						<xsd:documentation>
+							Allows customizing the class of the exception
+							to
+							be thrown if
+							validation fails. Valid values are canonical names
+							for
+							classes that extend java.lang.Exception and have a constructor
+							overriding java.lang.Exception(java.lang.String).
+							If not provided,
+							a org.mule.module.validation.ValidationException
+							will be thrown in
+							case of validation failure.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="message" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>
+							Allows customizing the message of the exception
+							to be thrown if
+							validation fails.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="domain" substitutionGroup="validationMessageProcessor"
+		type="ValidateDomainType" xmlns="http://www.mulesoft.org/schema/mule/validate">
+		<xsd:annotation>
+			<xsd:documentation>If the specified domain does not parses as a valid
+				domain name with a recognized top-level domain then throw an
+				exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateDomainType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				base="validationProcessorType">
+				<xsd:attribute name="domain" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Domain name to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="top-level-domain" substitutionGroup="validationMessageProcessor"
+		type="ValidateTopLevelDomainType" xmlns="http://www.mulesoft.org/schema/mule/validate"
+		xmlns:mule="http://www.mulesoft.org/schema/mule/core">
+		<xsd:annotation>
+			<xsd:documentation>If if the specified
+				top-level-domain does not
+				matches any
+				IANA-defined top-level domain throw an exception.
+				Leading
+				dots are
+				ignored if present. The search is case-sensitive.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateTopLevelDomainType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="top-level-domain" use="required"
+					type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Domain name to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="top-level-domain-country"
+		substitutionGroup="validationMessageProcessor" type="ValidateTopLevelDomainCountryType"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core">
+		<xsd:annotation>
+			<xsd:documentation>If if the specified
+				country-code does not matches
+				any
+				IANA-defined top-level domain throw an exception.
+				Leading dots are
+				ignored if present. The search is case-sensitive.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateTopLevelDomainCountryType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="country-code" use="required"
+					type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Country code to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element xmlns="http://www.mulesoft.org/schema/mule/validate"
+		xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="credit-card-number"
+		substitutionGroup="validationMessageProcessor" type="ValidateCreditCardNumberType">
+		<xsd:annotation>
+			<xsd:documentation>If the specified
+				credit-card-number is not a valid
+				credit card
+				number throw an exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateCreditCardNumberType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="credit-card-number" use="required"
+					type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Credit card number to validate
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="credit-card-type" use="required"
+					type="CreditCardTypeEnumType">
+					<xsd:annotation>
+						<xsd:documentation>Credit card type to validate
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="email" type="ValidateEmailType"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified
+				email is not a valid one throw an
+				exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateEmailType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="email" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Email address to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="ip-address" type="ValidateIpAddressType"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified
+				ip is not a valid one throw an
+				exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateIpAddressType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="ip" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>IP address to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="percentage" type="ValidatePercentageType"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified
+				percentage is not a valid one
+				throw an
+				exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidatePercentageType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="percentage" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Percentage to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="isbn10" type="isbn10Type"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified isbb is not a valid ISBN10 code
+				throw an
+				exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="isbn10Type">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="isbn" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>ISBN code to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="isbn13" type="isbn13Type"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified isbn
+				is not a valid ISBN13 throw
+				an exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="isbn13Type">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="isbn" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>ISBN code to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="url" type="ValidateUrlType"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified url is
+				not a valid one throw an
+				exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateUrlType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="url" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>URL to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="allow-two-slashes" default="false" use="optional" type="booleanType">
+					<xsd:annotation>
+						<xsd:documentation>Allow two slashes in the path component of the
+							URL.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="allow-all-schemes" default="false" use="optional" type="booleanType">
+					<xsd:annotation>
+						<xsd:documentation>Allows all validly formatted schemes to pass
+							validation instead of supplying a set of valid schemes.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="allow-local-urls" default="false" use="optional" type="booleanType">
+					<xsd:annotation>
+						<xsd:documentation>Allow local URLs, such as http://localhost/ or
+							http://machine/ .
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="no-fragments" default="false" use="optional" type="booleanType">
+					<xsd:annotation>
+						<xsd:documentation>Enabling this options disallows any URL
+							fragments.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="time"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" type="ValidateTimeType"
+		xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified time is
+				not a valid one throw an
+				exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateTimeType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="time" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Time to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="locale" default="US" use="optional" type="LocaleEnumType">
+					<xsd:annotation>
+						<xsd:documentation>The locale to use for the format
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="pattern" use="optional" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>The pattern used to format the value
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="date" type="ValidateDateType"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified date is
+				not a valid one throw an
+				exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateDateType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="date" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Date to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="locale" default="US" use="optional" type="LocaleEnumType">
+					<xsd:annotation>
+						<xsd:documentation>The locale to use for the format
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="pattern" use="optional" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>The pattern used to format the value
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="using-regex" type="ValidateUsingRegexType"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified value
+				does not match any of the
+				regexs then throw an exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateUsingRegexType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="value" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Value to match</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="regex" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Regular expression to test against
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="case-sensitive" default="false" use="optional" type="booleanType">
+					<xsd:annotation>
+						<xsd:documentation>when true matching is case sensitive, otherwise
+							matching is case in-sensitive
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="long" type="ValidateLongType"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified value is
+				not a valid Long throw an
+				exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateLongType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="value" use="required" type="longType">
+					<xsd:annotation>
+						<xsd:documentation>Value to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="locale" default="US" use="optional" type="LocaleEnumType">
+					<xsd:annotation>
+						<xsd:documentation>The locale to use for the format
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="pattern" use="optional" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>The pattern used to format the value
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="min-value" use="optional" type="longType">
+					<xsd:annotation>
+						<xsd:documentation>The minimum valid value</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="max-value" use="optional" type="longType">
+					<xsd:annotation>
+						<xsd:documentation>The maximum valid value</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="integer" type="ValidateIntegerType"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified value is
+				not a valid Integer throw
+				an
+				exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateIntegerType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="value" use="required" type="integerType">
+					<xsd:annotation>
+						<xsd:documentation>Value to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="locale" default="US" use="optional" type="LocaleEnumType">
+					<xsd:annotation>
+						<xsd:documentation>The locale to use for the format
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="pattern" use="optional" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>The pattern used to format the value
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="min-value" use="optional" type="integerType">
+					<xsd:annotation>
+						<xsd:documentation>The minimum valid value</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="max-value" use="optional" type="integerType">
+					<xsd:annotation>
+						<xsd:documentation>The maximum valid value</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="float" type="ValidateFloatType"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified value is
+				not a valid Float throw
+				an exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateFloatType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="value" use="required" type="floatType">
+					<xsd:annotation>
+						<xsd:documentation>Value to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="locale" default="US" use="optional" type="LocaleEnumType">
+					<xsd:annotation>
+						<xsd:documentation>The locale to use for the format
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="pattern" use="optional" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>The pattern used to format the value
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="min-value" use="optional" type="floatType">
+					<xsd:annotation>
+						<xsd:documentation>The minimum valid value</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="max-value" use="optional" type="floatType">
+					<xsd:annotation>
+						<xsd:documentation>The maximum valid value</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="double" type="ValidateDoubleType"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified value is
+				not a valid Double throw
+				an exception
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateDoubleType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="value" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Value to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="locale" default="US" use="optional" type="LocaleEnumType">
+					<xsd:annotation>
+						<xsd:documentation>The locale to use for the format
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="pattern" use="optional" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>The pattern used to format the value
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="min-value" use="optional" type="doubleType">
+					<xsd:annotation>
+						<xsd:documentation>The minimum valid value</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="max-value" use="optional" type="doubleType">
+					<xsd:annotation>
+						<xsd:documentation>The maximum valid value</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="short" type="ValidateShortType"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified value is
+				not a valid Short throw
+				an exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateShortType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="value" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Value to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="locale" default="US" use="optional" type="LocaleEnumType">
+					<xsd:annotation>
+						<xsd:documentation>The locale to use for the format
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="pattern" use="optional" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>The pattern used to format the value
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="min-value" use="optional" type="integerType">
+					<xsd:annotation>
+						<xsd:documentation>The minimum value</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="max-value" use="optional" type="integerType">
+					<xsd:annotation>
+						<xsd:documentation>The maximum value</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="not-empty" type="ValidateNotEmptyType"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>
+				If the specified value is empty or null throw an
+				exception. Value can
+				be a Sting literal or an expression which
+				resolves to a String,
+				Collection or Map
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateNotEmptyType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="value" default="#[payload]" use="optional"
+					type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>This expression should return a Collection, Map
+							or String to validate
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="length"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" type="ValidateLengthType"
+		xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the specified value is
+				not within the valid
+				limits throw an exception.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ValidateLengthType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="value" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>String to validate</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="min-length" default="0" use="optional" type="integerType">
+					<xsd:annotation>
+						<xsd:documentation>the minimum value</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute xmlns="http://www.mulesoft.org/schema/mule/validate"
+					name="max-length" use="required" type="integerType">
+					<xsd:annotation>
+						<xsd:documentation>the maximum value</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="not-null"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" type="NotNullType"
+		xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the given expression resolves to a value that's
+				null
+				or an instance of NullPayload throw an Exception
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="NotNullType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="expression" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>A mule expression or String literal
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="null"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" type="NullType"
+		xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the given expression resolves to a value that's
+				not null
+				or not an instance of NullPayload throw an Exception
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="NullType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="expression" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>A mule expression or String literal
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="true"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" type="TrueType"
+		xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the given expression resolves to a false
+				Boolean value throw an Exception
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="TrueType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="expression" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>A String literal or mule expression that can be
+							resolves to a
+							Boolean
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="false"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" type="FalseType"
+		xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>If the given expression resolves to a true
+				Boolean
+				value throw an Exception
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="FalseType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="validationProcessorType">
+				<xsd:attribute name="expression" use="required" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>A String literal or mule expression that can be
+							resolves to a
+							Boolean
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="all"
+		xmlns="http://www.mulesoft.org/schema/mule/validate" type="AllType"
+		xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+		substitutionGroup="validationMessageProcessor">
+		<xsd:annotation>
+			<xsd:documentation>
+				Executes all configured validations and throws one
+				single exception with the
+				messages for all the failed ones. Unlike
+				the other
+				messageProcessors, the exception thrown by this one is a
+				ValidationResultException and cannot be customized. However, you can
+				configure if you either want this validator to throw
+				an exception
+				(default) or set the message payload to an instance of
+				ValidationResult with all the messages
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="AllType">
+		<xsd:complexContent>
+			<xsd:extension xmlns="http://www.mulesoft.org/schema/mule/validate"
+				xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+				<xsd:sequence>
+					<xsd:element ref="validationMessageProcessor"
+						minOccurs="1" maxOccurs="unbounded" />
+				</xsd:sequence>
+				<xsd:attribute name="throws-exception" use="optional"
+					default="true" type="booleanType">
+					<xsd:annotation>
+						<xsd:documentation>
+							A boolean expression that if evaluated to true
+							will throw a ValidationResultException collecting the messages of
+							all failed validations. Otherwise, message payload
+							will be set to a ValidationResultException
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:simpleType name="CreditCardTypeEnumType">
+		<xsd:annotation>
+			<xsd:documentation></xsd:documentation>
+		</xsd:annotation>
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="VISA">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="MASTERCARD">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="DINERS">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="DISCOVER">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="AMEX">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+					base="mule:propertyPlaceholderType"></xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+	</xsd:simpleType>
+	<xsd:simpleType name="LocaleEnumType">
+		<xsd:annotation>
+			<xsd:documentation></xsd:documentation>
+		</xsd:annotation>
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="ENGLISH">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="FRENCH">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="GERMAN">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="ITALIAN">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="JAPANESE">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="KOREAN">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="CHINESE">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="SIMPLIFIED_CHINESE">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="TRADITIONAL_CHINESE">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="FRANCE">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="GERMANY">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="ITALY">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="JAPAN">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="KOREA">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="CHINA">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="PRC">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="TAIWAN">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="UK">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="US">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="CANADA">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="CANADA_FRENCH">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+					base="mule:propertyPlaceholderType"></xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+	</xsd:simpleType>
+	<xsd:simpleType name="integerType">
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:integer"></xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+					base="mule:propertyPlaceholderType"></xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+	</xsd:simpleType>
+	<xsd:simpleType name="decimalType">
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:decimal"></xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+					base="mule:propertyPlaceholderType"></xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+	</xsd:simpleType>
+	<xsd:simpleType name="floatType">
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:float"></xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+					base="mule:propertyPlaceholderType"></xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+	</xsd:simpleType>
+	<xsd:simpleType name="doubleType">
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:double"></xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+					base="mule:propertyPlaceholderType"></xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+	</xsd:simpleType>
+	<xsd:simpleType name="dateTimeType">
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:dateTime"></xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+					base="mule:propertyPlaceholderType"></xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+	</xsd:simpleType>
+	<xsd:simpleType name="longType">
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:long"></xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+					base="mule:propertyPlaceholderType"></xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+	</xsd:simpleType>
+	<xsd:simpleType name="byteType">
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:byte"></xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+					base="mule:propertyPlaceholderType"></xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+	</xsd:simpleType>
+	<xsd:simpleType name="booleanType">
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:boolean"></xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+					base="mule:propertyPlaceholderType"></xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+	</xsd:simpleType>
+	<xsd:simpleType name="anyUriType">
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:anyURI"></xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+					base="mule:propertyPlaceholderType"></xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+	</xsd:simpleType>
+	<xsd:simpleType name="charType">
+		<xsd:union>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="1"></xsd:minLength>
+					<xsd:maxLength value="1"></xsd:maxLength>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType>
+				<xsd:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+					base="mule:propertyPlaceholderType"></xsd:restriction>
+			</xsd:simpleType>
+		</xsd:union>
+	</xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:validate="http://www.mulesoft.org/schema/mule/validate"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/validate http://www.mulesoft.org/schema/mule/validate/current/mule-validate.xsd">
+
+	<flow name="failures">
+		<validate:all>
+			<validate:true expression="true" />
+			<validate:true expression="false" />
+			<validate:false expression="true" />
+		</validate:all>
+	</flow>
+
+	<flow name="failuresWithoutException">
+		<validate:all throws-exception="false">
+			<validate:true expression="true" />
+			<validate:true expression="false" />
+			<validate:false expression="true" />
+		</validate:all>
+	</flow>
+
+	<flow name="noFailures">
+		<validate:all throws-exception="#[false]">
+			<validate:true expression="true" />
+			<validate:true expression="true" />
+			<validate:true expression="true" />
+		</validate:all>
+	</flow>
+
+</mule>

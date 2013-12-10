@@ -206,9 +206,19 @@ public abstract class ExpressionEvaluatorSupport
                                           Object source)
         throws TransformerException, TransformerMessagingException
     {
+        return evaluateAndTransform(muleContext, event, expectedType, expectedMimeType, source, null);
+    }
+    protected Object evaluateAndTransform(MuleContext muleContext,
+                                          MuleEvent event,
+                                          Type expectedType,
+                                          String expectedMimeType,
+                                          Object source,
+                                          Object defaultValue)
+        throws TransformerException, TransformerMessagingException
+    {
         if (source == null)
         {
-            return source;
+            return defaultValue != null ? defaultValue : source;
         }
         Object target = null;
         if (isList(source.getClass()))

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:validate="http://www.mulesoft.org/schema/mule/validate"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/validate http://www.mulesoft.org/schema/mule/validate/current/mule-validate.xsd">
+
+    <flow name="ipValid">
+        <validate:ip-address ip="127.0.0.0" />
+    </flow>
+    
+    <flow name="ipInvalid">
+        <validate:ip-address ip="#[ip]" />
+    </flow>
+    
+    <flow name="ipCustomInvalid">
+        <validate:ip-address ip="#[ip]" exception-class="#[exceptionClass]" message="#[customMessage]" />
+    </flow>
+    
+</mule>

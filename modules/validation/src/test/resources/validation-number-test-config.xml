@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:validate="http://www.mulesoft.org/schema/mule/validate"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/validate http://www.mulesoft.org/schema/mule/validate/current/mule-validate.xsd">
+
+    <flow name="longValid">
+        <validate:long value="4" locale="US"/>
+    </flow>
+    
+    <flow name="longInvalid">
+        <validate:long value="#[value]" min-value="#[min]" max-value="#[max]" />
+    </flow>
+    
+	<flow name="longCustomInvalid">
+        <validate:long value="#[value]" min-value="#[min]" max-value="#[max]" exception-class="#[exceptionClass]" message="#[customMessage]" />
+    </flow>
+    
+    <flow name="doubleValid">
+        <validate:double value="4" locale="US"/>
+    </flow>
+    
+    <flow name="doubleInvalid">
+        <validate:double value="#[value]" min-value="#[min]" max-value="#[max]" />
+    </flow>
+    
+	<flow name="doubleCustomInvalid">
+        <validate:double value="#[value]" min-value="#[min]" max-value="#[max]" exception-class="#[exceptionClass]" message="#[customMessage]" />
+    </flow>
+    
+    <flow name="floatValid">
+        <validate:float value="4.0" locale="US"/>
+    </flow>
+    
+    <flow name="floatInvalid">
+        <validate:float value="#[value]" min-value="#[min]" max-value="#[max]" />
+    </flow>
+    
+	<flow name="floatCustomInvalid">
+        <validate:float value="#[value]" min-value="#[min]" max-value="#[max]" exception-class="#[exceptionClass]" message="#[customMessage]" />
+    </flow>
+    
+    <flow name="integerValid">
+        <validate:integer value="4" locale="US"/>
+    </flow>
+    
+    <flow name="integerInvalid">
+        <validate:integer value="#[value]" min-value="#[min]" max-value="#[max]" />
+    </flow>
+    
+	<flow name="integerCustomInvalid">
+        <validate:integer value="#[value]" min-value="#[min]" max-value="#[max]" exception-class="#[exceptionClass]" message="#[customMessage]" />
+    </flow>
+    
+    <flow name="shortValid">
+        <validate:short value="4" locale="US"/>
+    </flow>
+    
+    <flow name="shortInvalid">
+        <validate:short value="#[value]" min-value="#[min]" max-value="#[max]" />
+    </flow>
+    
+	<flow name="shortCustomInvalid">
+        <validate:short value="#[value]" min-value="#[min]" max-value="#[max]" exception-class="#[exceptionClass]" message="#[customMessage]" />
+    </flow>
+    
+</mule>

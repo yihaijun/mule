@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:validate="http://www.mulesoft.org/schema/mule/validate"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/validate http://www.mulesoft.org/schema/mule/validate/current/mule-validate.xsd">
+
+	<flow name="timeValid">
+    	<validate:time time="12:08 PM" pattern="h:mm a" locale="US" />
+    </flow>
+
+    <flow name="timeInvalid">
+    	<validate:time time="#[time]"  />
+    </flow>
+
+    <flow name="timeCustomInvalid">
+    	<validate:time time="#[time]" exception-class="#[exceptionClass]" message="#[customMessage]" />
+    </flow>
+    
+	<flow name="dateValid">
+		<validate:date date="Wed, Jul 4, '01" pattern="EEE, MMM d, ''yy" locale="US" />    	
+    </flow>
+    
+    <flow name="dateInvalid">
+		<validate:date date="#[date]" pattern="#[pattern]" locale="#[locale]" />    	
+    </flow>
+    
+    <flow name="dateCustomInvalid">
+		<validate:date date="#[date]" pattern="#[pattern]" locale="#[locale]" exception-class="#[exceptionClass]" message="#[customMessage]" />    	
+    </flow>
+    
+</mule>
