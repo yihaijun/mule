@@ -18,3 +18,4 @@ target/
 /svnmerge-commit-message.txt
 /activemq-data
 /modules/logging/dependency-reduced-pom.xml
+*.prefs
