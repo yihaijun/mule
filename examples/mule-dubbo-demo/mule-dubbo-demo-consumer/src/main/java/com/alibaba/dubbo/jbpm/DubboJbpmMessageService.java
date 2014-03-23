@@ -9,10 +9,10 @@ package com.alibaba.dubbo.jbpm;
 
 import java.util.Map;
 
-import com.alibaba.dubbo.bpm.DubboBpmMessage;
-import com.alibaba.dubbo.bpm.MessageExchangePattern;
 import com.alibaba.dubbo.bpm.MessageService;
 import com.alibaba.dubbo.bpm.ProcessComponent;
+import com.alibaba.dubbo.bpm.api.DubboBpmMessage;
+import com.alibaba.dubbo.bpm.api.MessageExchangePattern;
 
 /**
  * Proxy for the message-generation service provided by Mule. The real service gets

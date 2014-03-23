@@ -21,9 +21,9 @@ import org.jbpm.pvm.internal.env.EnvironmentImpl;
 import org.jbpm.pvm.internal.model.ExecutionImpl;
 import org.jbpm.pvm.internal.script.ScriptManager;
 
-import com.alibaba.dubbo.bpm.DubboBpmMessage;
-import com.alibaba.dubbo.bpm.MessageExchangePattern;
 import com.alibaba.dubbo.bpm.MessageService;
+import com.alibaba.dubbo.bpm.api.DubboBpmMessage;
+import com.alibaba.dubbo.bpm.api.MessageExchangePattern;
 
 public class DubboJbpmSendActivity extends JpdlActivity implements EventListener
 {

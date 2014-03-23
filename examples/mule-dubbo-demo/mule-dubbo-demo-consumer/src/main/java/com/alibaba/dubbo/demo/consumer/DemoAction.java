@@ -15,20 +15,68 @@
  */
 package com.alibaba.dubbo.demo.consumer;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.jbpm.api.ProcessInstance;
+
+import com.alibaba.dubbo.bpm.ProcessComponent;
+import com.alibaba.dubbo.bpm.api.DubboBpmEvent;
+import com.alibaba.dubbo.bpm.api.DubboBpmMessage;
 import com.alibaba.dubbo.demo.DemoService;
+import com.alibaba.dubbo.jbpm.Jbpm;
 
 public class DemoAction {
     
     private DemoService demoService;
+    private Jbpm jbpm;
+    private ProcessComponent processComponent;
 
     public void setDemoService(DemoService demoService) {
         this.demoService = demoService;
     }
 
+
+	/**
+	 * @param jbpm the jbpm to set
+	 */
+	public void setJbpm(Jbpm jbpm) {
+		this.jbpm = jbpm;
+		try {
+			jbpm.setName("fork-process.jpdl.xml");
+			jbpm.deployProcess("fork-process.jpdl.xml");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @param processComponent the processComponent to set
+	 */
+	public void setProcessComponent(ProcessComponent processComponent) {
+		this.processComponent = processComponent;
+	}
+
+	private DubboBpmMessage call(String method,Object in){
+		return null;
+	}
+	
+	
+
 	public void start() throws Exception {
+		jbpm.initialise();
+		DubboBpmEvent dubboBpmEvent = new DubboBpmEvent();
+		processComponent.doInvoke(dubboBpmEvent);
+		DubboBpmMessage response =  call("method",null);
+        ProcessInstance process = (ProcessInstance) response.getPayload();
+        String state = (String) jbpm.getState(process);
+        process = (ProcessInstance) jbpm.lookupProcess(process.getId());
+        // Start ServiceA
+//      muleContext.getRegistry().lookupService("ServiceA").resume();
+      Thread.sleep(2000);
+        process = (ProcessInstance) jbpm.lookupProcess(process.getId());
+
         for (int i = 0; i < Integer.MAX_VALUE; i ++) {
             try {
             	String hello = demoService.sayHello("world" + i);

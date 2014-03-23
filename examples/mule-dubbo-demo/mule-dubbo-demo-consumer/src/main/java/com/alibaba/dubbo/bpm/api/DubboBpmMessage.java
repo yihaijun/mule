@@ -1,4 +1,4 @@
-package com.alibaba.dubbo.bpm;
+package com.alibaba.dubbo.bpm.api;
 /**
  * 
  */
