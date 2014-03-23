@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.alibaba.dubbo.bpm.api.DefaultDubboBpmMessage;
 import com.alibaba.dubbo.bpm.api.Disposable;
 import com.alibaba.dubbo.bpm.api.DubboBpmEvent;
 import com.alibaba.dubbo.bpm.api.DubboBpmMessage;
@@ -139,28 +140,22 @@ public class Process implements Initialisable, Disposable, MessageService
         return name;
     }
 
-//  protected Object processAction(MuleEvent event) throws Exception
-	public DubboBpmMessage generateMessage(String endpoint,
-			Object payloadObject, Map messageProperties,
+    public DubboBpmMessage generateMessage(String endpoint,
+			Object payload, Map messageProperties,
 			MessageExchangePattern mep) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	//
-//  public MuleMessage generateMessage(String endpoint, Object payload, Map messageProperties, MessageExchangePattern exchangePattern) throws MuleException
-//  {
-//      MuleMessage message;
-//      if (payload instanceof MuleMessage)
-//      {
-//          message = (MuleMessage) payload;
-//      }
-//      else
-//      {
-//          message = new DefaultMuleMessage(payload, muleContext);
-//      }
-//      message.addProperties(messageProperties, PropertyScope.INBOUND);
-//      message.addProperties(messageProperties, PropertyScope.INVOCATION);
-//
-//      // Use an endpoint cache to prevent memory leaks (see MULE-5422)
+      DubboBpmMessage message;
+      if (payload instanceof DubboBpmMessage)
+      {
+          message = (DubboBpmMessage) payload;
+      }
+      else
+      {
+//          message = new DefaultDubboBpmMessage(payload, muleContext);
+    	  message = new DefaultDubboBpmMessage(payload);
+      }
+      message.getMessageProperties().putAll(messageProperties);
+
+      // Use an endpoint cache to prevent memory leaks (see MULE-5422)
 //      OutboundEndpoint ep = endpointCache.getOutboundEndpoint(endpoint, exchangePattern, null);
 //      DefaultMuleEvent event = new DefaultMuleEvent(message, ep, new DefaultMuleSession(flowConstruct, muleContext));
 //      RequestContext.setEvent(event);
@@ -175,20 +170,21 @@ public class Process implements Initialisable, Disposable, MessageService
 //          event.getMessage().setSessionProperty(PROPERTY_PROCESS_ID, messageProperties.get(PROPERTY_PROCESS_ID));
 //      }
 //      
-//      MuleEvent resultEvent = ep.process(event);
-//      
-//      MuleMessage response = null;
-//      if (resultEvent != null)
-//      {
-//          response = resultEvent.getMessage();
+      DubboBpmEvent resultEvent = new DubboBpmEvent();//= ep.process(event);
+      
+      DubboBpmMessage response = null;
+      if (resultEvent != null)
+      {
+          response = resultEvent.getDubboBpmMessage();
 //          if (response.getExceptionPayload() != null)
 //          {
 //              throw new DispatchException(MessageFactory.createStaticMessage("Unable to send or route message"), event, ep, response.getExceptionPayload().getRootException());
 //          }
-//      }        
-//      return response;
+      }        
+      return response;
   }
 	
+//  protected Object processAction(MuleEvent event) throws Exception
   protected Object processAction(DubboBpmEvent event) throws Exception{
     // An object representing the new state of the process
     Object process;
@@ -197,16 +193,16 @@ public class Process implements Initialisable, Disposable, MessageService
     Map processVariables = new HashMap();
     if (event != null)
     {
-    	processVariables.putAll(event.getProcessVariables());
+    	processVariables.putAll(event.getDubboBpmMessage().getProcessVariables());
 
-    	Object payload = event.getParam();
+    	Object payload = event.getDubboBpmMessage().getParam();
         if (payload != null )
         {
             // Store the message's payload as a process variable.
             processVariables.put(PROCESS_VARIABLE_INCOMING, payload);
 
             // Store the endpoint on which the message was received as a process variable.
-            String originatingEndpoint = event.getOriginatingEndpoint();
+            String originatingEndpoint = event.getDubboBpmMessage().getOriginatingEndpoint();
             if (StringUtils.isNotEmpty(originatingEndpoint))
             {
                 processVariables.put(PROCESS_VARIABLE_INCOMING_SOURCE, originatingEndpoint);
@@ -221,22 +217,22 @@ public class Process implements Initialisable, Disposable, MessageService
     }
 
     Object processId;
-    processId = event.getProcessVariables().get(processIdField);
+    processId = event.getDubboBpmMessage().getProcessVariables().get(processIdField);
     processVariables.remove(processIdField);
 
     // Default action is "advance"
-    String action = event.getProcessVariables().get(PROPERTY_ACTION).toString();
+    String action = event.getDubboBpmMessage().getProcessVariables().get(PROPERTY_ACTION).toString();
     if(action == null || action.equals("")){
     	action = ACTION_ADVANCE;
     }
     processVariables.remove(PROPERTY_ACTION);
 
-    Object transition = event.getProcessVariables().get(PROPERTY_TRANSITION);
+    Object transition = event.getDubboBpmMessage().getProcessVariables().get(PROPERTY_TRANSITION);
     processVariables.remove(PROPERTY_TRANSITION);
 
     // //////////////////////////////////////////////////////////////////////
 
-    logger.debug("Message received: payload = " + event.getParam().getClass().getName() + " processType = " + name + " processId = " + processId + " action = " + action);
+    logger.debug("Message received: payload = " + event.getDubboBpmMessage().getParam().getClass().getName() + " processType = " + name + " processId = " + processId + " action = " + action);
     
     // Start a new process.
     if (processId == null || action.equals(ACTION_START))

@@ -22,13 +22,15 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.dubbo.bpm.BPMS;
 import com.alibaba.dubbo.bpm.MessageService;
-import com.alibaba.dubbo.common.utils.IOUtils;
+import com.alibaba.dubbo.bpm.api.Disposable;
+import com.alibaba.dubbo.bpm.api.NamedObject;
+import com.alibaba.dubbo.bpm.api.lifecycle.Initialisable;
+import com.alibaba.dubbo.bpm.util.IOUtils;
 
 /**
  * An implementation of Mule's generic {@link BPMS} interface for JBoss jBPM.
  */
-//public class Jbpm implements BPMS, Initialisable, Disposable, NamedObject
-public class Jbpm implements BPMS//, Initialisable, Disposable, NamedObject
+public class Jbpm implements BPMS, Initialisable, Disposable, NamedObject
 {
     /**
      * The initialized jBPM ProcessEngine.
@@ -142,7 +144,7 @@ public class Jbpm implements BPMS//, Initialisable, Disposable, NamedObject
     public void setMessageService(MessageService msgService)
     {
         DubboJbpmMessageService serviceProxy = processEngine.get(DubboJbpmMessageService.class);
-//        serviceProxy.setMessageService(msgService);
+        serviceProxy.setMessageService(msgService);
     }
 
     // ///////////////////////////////////////////////////////////////////////////
@@ -354,8 +356,8 @@ public class Jbpm implements BPMS//, Initialisable, Disposable, NamedObject
 
     public void deployProcess(String processDefinitionFile) throws IOException
     {
-//        deployProcessFromStream(processDefinitionFile, IOUtils.getResourceAsStream(processDefinitionFile,
-//            getClass()));
+        deployProcessFromStream(processDefinitionFile, IOUtils.getResourceAsStream(processDefinitionFile,
+            getClass()));
     }
 
     public void deployProcessFromStream(String resourceName, InputStream processDefinition)

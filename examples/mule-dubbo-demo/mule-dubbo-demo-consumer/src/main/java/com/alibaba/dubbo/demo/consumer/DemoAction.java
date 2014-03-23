@@ -26,6 +26,8 @@ import com.alibaba.dubbo.bpm.api.DubboBpmEvent;
 import com.alibaba.dubbo.bpm.api.DubboBpmMessage;
 import com.alibaba.dubbo.demo.DemoService;
 import com.alibaba.dubbo.jbpm.Jbpm;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class DemoAction {
     
@@ -35,6 +37,22 @@ public class DemoAction {
 
     public void setDemoService(DemoService demoService) {
         this.demoService = demoService;
+//        try {
+//        	Method method =demoService.getClass().getMethod("patrol", String.class, String.class, String.class, String.class);
+//			String out = (String) method.invoke(demoService, "context", "testType", "appName", "serviceName");
+//			context.getBean("demoCallbackService");
+//		} catch (SecurityException e) {
+//			e.printStackTrace();
+//		} catch (NoSuchMethodException e) {
+//			e.printStackTrace();
+//		} catch (IllegalArgumentException e) {
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			e.printStackTrace();
+//		} catch (InvocationTargetException e) {
+//			e.printStackTrace();
+//		}
+
     }
 
 

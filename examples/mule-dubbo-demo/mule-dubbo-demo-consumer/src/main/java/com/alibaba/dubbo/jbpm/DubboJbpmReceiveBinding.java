@@ -18,7 +18,7 @@ public class DubboJbpmReceiveBinding extends JpdlBinding
 {
     public DubboJbpmReceiveBinding()
     {
-        super("mule-receive");
+        super("dubbo-receive");
     }
 
     public Object parseJpdl(Element element, Parse parse, JpdlParser parser)

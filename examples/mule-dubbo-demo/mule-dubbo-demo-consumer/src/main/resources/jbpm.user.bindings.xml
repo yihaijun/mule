@@ -1,0 +1,5 @@
+<bindings>
+    <activity binding="com.alibaba.dubbo.jbpm.DubboJbpmSendBinding" />
+    <activity binding="com.alibaba.dubbo.jbpm.DubboJbpmReceiveBinding" />
+    <eventlistener binding="com.alibaba.dubbo.jbpm.DubboJbpmSendBinding" />
+</bindings>

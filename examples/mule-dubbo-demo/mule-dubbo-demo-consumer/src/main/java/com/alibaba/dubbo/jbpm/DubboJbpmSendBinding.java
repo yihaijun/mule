@@ -16,7 +16,7 @@ public class DubboJbpmSendBinding extends JpdlBinding
 {
     public DubboJbpmSendBinding()
     {
-        super("mule-send");
+        super("dubbo-send");
     }
 
     @Override

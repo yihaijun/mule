@@ -14,6 +14,8 @@ import org.jbpm.internal.log.Log;
 import org.jbpm.jpdl.internal.activity.StateActivity;
 import org.jbpm.pvm.internal.model.ExecutionImpl;
 
+import com.alibaba.dubbo.bpm.util.ClassUtils;
+
 public class DubboJbpmReceiveActivity extends StateActivity
 {
     /**
@@ -63,7 +65,7 @@ public class DubboJbpmReceiveActivity extends StateActivity
     public void signal(ActivityExecution execution, String signalName, Map<String, ?> parameters)
     throws Exception
     {
-        Object payload = null;//execution.getVariable(Process.PROCESS_VARIABLE_INCOMING);
+        Object payload = execution.getVariable(com.alibaba.dubbo.bpm.Process.PROCESS_VARIABLE_INCOMING);
 
         // Validate expected inbound endpoint
         if (endpoint != null)
@@ -127,14 +129,14 @@ public class DubboJbpmReceiveActivity extends StateActivity
     {
         if (className != null)
         {
-//            try
-//            {
-//                payloadClass = ClassUtils.loadClass(className, this.getClass());
-//            }
-//            catch (ClassNotFoundException e)
-//            {
-//                log.error("Expected message type not valid: " + e.getMessage());
-//            }
+            try
+            {
+                payloadClass = ClassUtils.loadClass(className, this.getClass());
+            }
+            catch (ClassNotFoundException e)
+            {
+                log.error("Expected message type not valid: " + e.getMessage());
+            }
         }
     }
 
