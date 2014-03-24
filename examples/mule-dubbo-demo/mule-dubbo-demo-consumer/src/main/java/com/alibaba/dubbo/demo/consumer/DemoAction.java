@@ -15,19 +15,17 @@
  */
 package com.alibaba.dubbo.demo.consumer;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.jbpm.api.ProcessInstance;
 
 import com.alibaba.dubbo.bpm.ProcessComponent;
+import com.alibaba.dubbo.bpm.api.DefaultDubboBpmMessage;
 import com.alibaba.dubbo.bpm.api.DubboBpmEvent;
 import com.alibaba.dubbo.bpm.api.DubboBpmMessage;
 import com.alibaba.dubbo.demo.DemoService;
 import com.alibaba.dubbo.jbpm.Jbpm;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class DemoAction {
     
@@ -62,7 +60,7 @@ public class DemoAction {
 	public void setJbpm(Jbpm jbpm) {
 		this.jbpm = jbpm;
 		try {
-			jbpm.setName("fork-process.jpdl.xml");
+			jbpm.setName("fork");
 			jbpm.initialise();
 			jbpm.deployProcess("fork-process.jpdl.xml");
 		} catch (Exception e) {
@@ -78,7 +76,7 @@ public class DemoAction {
 	}
 
 	private DubboBpmMessage call(String method,Object in){
-		return null;
+		return new DefaultDubboBpmMessage("test");
 	}
 	
 	
@@ -86,9 +84,14 @@ public class DemoAction {
 	public void start() throws Exception {
 //		jbpm.initialise();
 		DubboBpmEvent dubboBpmEvent = new DubboBpmEvent();
+		processComponent.setName("fork");
+		processComponent.setBpms(jbpm);
+		processComponent.setResource(jbpm.getProcessDefinitionFile());
+		processComponent.doInitialise();
 		processComponent.doInvoke(dubboBpmEvent);
-		DubboBpmMessage response =  call("method",null);
-        ProcessInstance process = (ProcessInstance) response.getPayload();
+		Object response =  processComponent.doInvoke(dubboBpmEvent); //call("method",null);
+        ProcessInstance process = (ProcessInstance) response;
+
         String state = (String) jbpm.getState(process);
         process = (ProcessInstance) jbpm.lookupProcess(process.getId());
         // Start ServiceA
@@ -96,7 +99,8 @@ public class DemoAction {
       Thread.sleep(2000);
         process = (ProcessInstance) jbpm.lookupProcess(process.getId());
 
-        for (int i = 0; i < Integer.MAX_VALUE; i ++) {
+//        for (int i = 0; i < Integer.MAX_VALUE; i ++) {
+      for (int i = 0; i < 10; i ++) {
             try {
             	String hello = demoService.sayHello("world" + i);
                 System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] " + hello);

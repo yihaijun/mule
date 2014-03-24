@@ -3,15 +3,13 @@
  */
 package com.alibaba.dubbo.bpm.api;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author yihaijun
  *
  */
 public class DubboBpmEvent {
-	private DubboBpmMessage dubboBpmMessage;
+	private DubboBpmMessage dubboBpmMessage = new DefaultDubboBpmMessage("");
 
 	/**
 	 * @return the dubboBpmMessage

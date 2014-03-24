@@ -22,6 +22,8 @@ import org.jbpm.pvm.internal.model.ExecutionImpl;
 import org.jbpm.pvm.internal.script.ScriptManager;
 
 import com.alibaba.dubbo.bpm.MessageService;
+import com.alibaba.dubbo.bpm.Process;
+import com.alibaba.dubbo.bpm.api.DefaultDubboBpmMessage;
 import com.alibaba.dubbo.bpm.api.DubboBpmMessage;
 import com.alibaba.dubbo.bpm.api.MessageExchangePattern;
 
@@ -76,10 +78,10 @@ public class DubboJbpmSendActivity extends JpdlActivity implements EventListener
         Object payloadObject = null;
         if (payloadExpression == null)
         {
-            payloadObject = null;//execution.getVariable(Process.PROCESS_VARIABLE_DATA);
+            payloadObject = execution.getVariable(Process.PROCESS_VARIABLE_DATA);
             if (payloadObject == null)
             {
-//                payloadObject = execution.getVariable(Process.PROCESS_VARIABLE_INCOMING);
+                payloadObject = execution.getVariable(Process.PROCESS_VARIABLE_INCOMING);
             }
         }
         else
@@ -116,8 +118,11 @@ public class DubboJbpmSendActivity extends JpdlActivity implements EventListener
         // Just in case the endpoint itself is an expression
         endpoint = (String) ScriptManager.getScriptManager().evaluateExpression(endpoint, null);
 //        MuleMessage response = mule.generateMessage(endpoint, payloadObject, props, mep);
-        DubboBpmMessage response = null;
+        DubboBpmMessage response = new DefaultDubboBpmMessage("endpoint = " + endpoint + ",now is " + System.currentTimeMillis());
 
+        log.info("request =" + payloadObject.toString() + ",now is " + System.currentTimeMillis());
+        log.info("response =" + response.getPayload().toString());
+        
         if (mep.hasResponse() && response != null)
         {
             Object responsePayload = response.getPayload();

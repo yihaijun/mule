@@ -69,6 +69,9 @@ public class Jbpm implements BPMS, Initialisable, Disposable, NamedObject
 
     protected static final Logger log = LoggerFactory.getLogger(Jbpm.class);
 
+
+    private String processDefinitionFile = "";
+    
     // ///////////////////////////////////////////////////////////////////////////
     // Lifecycle methods
     // ///////////////////////////////////////////////////////////////////////////
@@ -356,6 +359,7 @@ public class Jbpm implements BPMS, Initialisable, Disposable, NamedObject
 
     public void deployProcess(String processDefinitionFile) throws IOException
     {
+    	this.processDefinitionFile = processDefinitionFile;
         deployProcessFromStream(processDefinitionFile, IOUtils.getResourceAsStream(processDefinitionFile,
             getClass()));
     }
@@ -426,4 +430,20 @@ public class Jbpm implements BPMS, Initialisable, Disposable, NamedObject
     {
         return name;
     }
+
+	/**
+	 * @return the processDefinitionFile
+	 */
+	public String getProcessDefinitionFile() {
+		return processDefinitionFile;
+	}
+
+	/**
+	 * @param processDefinitionFile the processDefinitionFile to set
+	 */
+	public void setProcessDefinitionFile(String processDefinitionFile) {
+		this.processDefinitionFile = processDefinitionFile;
+	}
+    
+    
 }

@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <process name="fork" xmlns="http://jbpm.org/4.3/jpdl">
-
     <start name="start">
         <transition to="fork" />
     </start>
 
     <fork name="fork">
-      <transition to="sendAsynchronousMessageA" />
-      <transition to="sendSynchronousMessage" />
-      <transition to="sendAsynchronousMessageB" />
+      <transition to="depositMoney" />
+      <transition to="transferMoney" />
+      <transition to="deductingMoney" />
     </fork>
 
-        <mule-send name="sendAsynchronousMessageA" endpoint="vm://queueA" payload="Message A" exchange-pattern="one-way">
-            <transition to="waitForResponseA" />
-        </mule-send>
+    <dubbo-send name="depositMoney" interface="com.bestpay.accountsystem.service.AccountSystemService" 
+    										    method="depositMoney" 
+    										    payload="Message A" exchange-pattern="one-way">
+        <transition to="waitForResponseA" />
+    </dubbo-send>
 
-        <state name="waitForResponseA">
-            <transition to="join" />
-        </state>
+    <state name="waitForResponseA">
+        <transition to="join" />
+    </state>
 
-        <mule-send name="sendSynchronousMessage" endpoint="vm://echo" payload="Message in a bottle." exchange-pattern="request-response">
-            <transition to="join" />
-        </mule-send>
+    <dubbo-send name="transferMoney" interface="com.bestpay.accountsystem.service.AccountSystemService"
+    								 method="transferMoney" 
+    								 payload="Message B" 	 exchange-pattern="request-response">
+        <transition to="join" />
+    </dubbo-send>
 
-        <mule-send name="sendAsynchronousMessageB" endpoint="vm://queueB" payload="Message B" exchange-pattern="one-way">
-            <transition to="waitForResponseB" />
-        </mule-send>
+    <dubbo-send name="deductingMoney" interface="com.bestpay.accountsystem.service.AccountSystemService"
+    								 method="deductingMoney" 
+    								 payload="Message C" 	exchange-pattern="one-way">
+        <transition to="waitForResponseB" />
+    </dubbo-send>
 
-        <state name="waitForResponseB">
-            <transition to="join" />
-        </state>
+    <state name="waitForResponseB">
+        <transition to="join" />
+    </state>
 
     <join name="join" >
        <transition to="end"/>

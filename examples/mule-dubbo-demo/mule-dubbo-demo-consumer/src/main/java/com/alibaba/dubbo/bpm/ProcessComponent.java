@@ -32,7 +32,7 @@ public class ProcessComponent  {//implements Component, MuleContextAware, Lifecy
     private String processIdField;
 
 //    @Override
-    protected void doInitialise() throws InitialisationException
+    public void doInitialise() throws InitialisationException
     {
 //        if (bpms == null)
 //        {

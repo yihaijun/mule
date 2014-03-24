@@ -171,6 +171,7 @@ public class Process implements Initialisable, Disposable, MessageService
 //      }
 //      
       DubboBpmEvent resultEvent = new DubboBpmEvent();//= ep.process(event);
+      resultEvent.setDubboBpmMessage(message);
       
       DubboBpmMessage response = null;
       if (resultEvent != null)
@@ -195,7 +196,7 @@ public class Process implements Initialisable, Disposable, MessageService
     {
     	processVariables.putAll(event.getDubboBpmMessage().getProcessVariables());
 
-    	Object payload = event.getDubboBpmMessage().getParam();
+    	Object payload = event.getDubboBpmMessage().getPayload();
         if (payload != null )
         {
             // Store the message's payload as a process variable.
@@ -221,9 +222,12 @@ public class Process implements Initialisable, Disposable, MessageService
     processVariables.remove(processIdField);
 
     // Default action is "advance"
-    String action = event.getDubboBpmMessage().getProcessVariables().get(PROPERTY_ACTION).toString();
-    if(action == null || action.equals("")){
-    	action = ACTION_ADVANCE;
+    String action = ACTION_ADVANCE;
+    if(event.getDubboBpmMessage().getProcessVariables().get(PROPERTY_ACTION) != null){
+	    action = event.getDubboBpmMessage().getProcessVariables().get(PROPERTY_ACTION).toString();
+	    if(action == null || action.equals("")){
+	    	action = ACTION_ADVANCE;
+	    }
     }
     processVariables.remove(PROPERTY_ACTION);
 
@@ -232,7 +236,7 @@ public class Process implements Initialisable, Disposable, MessageService
 
     // //////////////////////////////////////////////////////////////////////
 
-    logger.debug("Message received: payload = " + event.getDubboBpmMessage().getParam().getClass().getName() + " processType = " + name + " processId = " + processId + " action = " + action);
+    logger.debug("Message received: payload = " + event.getDubboBpmMessage().getPayload().getClass().getName() + " processType = " + name + " processId = " + processId + " action = " + action);
     
     // Start a new process.
     if (processId == null || action.equals(ACTION_START))

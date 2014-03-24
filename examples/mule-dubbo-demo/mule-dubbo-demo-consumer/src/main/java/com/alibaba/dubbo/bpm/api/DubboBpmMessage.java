@@ -26,16 +26,6 @@ public abstract interface DubboBpmMessage extends java.io.Serializable {
 	public void setMethod(String method);
 	
 	/**
-	 * @return the param
-	 */
-	public Object getParam();
-	
-	/**
-	 * @param param the param to set
-	 */
-	public void setParam(Object param);
-	
-	/**
 	 * @return the processIdField
 	 */
 	public String getProcessIdField();
