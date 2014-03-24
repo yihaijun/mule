@@ -63,8 +63,9 @@ public class DemoAction {
 		this.jbpm = jbpm;
 		try {
 			jbpm.setName("fork-process.jpdl.xml");
+			jbpm.initialise();
 			jbpm.deployProcess("fork-process.jpdl.xml");
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -83,7 +84,7 @@ public class DemoAction {
 	
 
 	public void start() throws Exception {
-		jbpm.initialise();
+//		jbpm.initialise();
 		DubboBpmEvent dubboBpmEvent = new DubboBpmEvent();
 		processComponent.doInvoke(dubboBpmEvent);
 		DubboBpmMessage response =  call("method",null);

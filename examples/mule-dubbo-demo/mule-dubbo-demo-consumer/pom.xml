@@ -256,6 +256,22 @@
             <groupId>org.jbpm.jbpm4</groupId>
             <artifactId>jbpm-pvm</artifactId>
         </dependency>
+        <dependency>
+		  <groupId>javax.servlet.jsp</groupId>
+		  <artifactId>jsp-api</artifactId>
+		  <version>2.1</version>
+        </dependency>
+        <dependency>
+		   <groupId>javax.transaction</groupId>
+           <artifactId>jta</artifactId>
+		   <version>1.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+  <artifactId>derby</artifactId>
+    <version>10.6.1.0</version>
+        </dependency>
 	</dependencies>
 	<build>
         <defaultGoal>install</defaultGoal>
